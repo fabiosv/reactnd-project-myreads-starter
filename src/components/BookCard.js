@@ -3,7 +3,7 @@ import BookMenuOption from './BookMenuOption'
 
 class BookCard extends Component {
   render(){
-    const { book }= this.props;
+    const { book, currentShelf }= this.props;
     return(
       <div className="book">
         <div className="book-top">
@@ -14,7 +14,7 @@ class BookCard extends Component {
               backgroundImage: `url(${book.imageURL})`
             }}
           />
-          <BookMenuOption />
+          <BookMenuOption currentShelf={currentShelf}/>
         </div>
         <div className="book-title">{book.title}</div>
         <div className="book-authors">{book.authors}</div>

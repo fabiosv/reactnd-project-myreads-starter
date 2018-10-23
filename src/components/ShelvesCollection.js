@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import BookShelf from './BookShelf'
 
-class ShelfsCollection extends Component {
+class ShelvesCollection extends Component {
 
   render(){
-    const { shelfs } = this.props;
+    const { shelves } = this.props;
     return(
       <div className="list-books-content">
         <div>
-          {shelfs.map((shelf) => (
+          {shelves.map((shelf) => (
             <BookShelf shelf={shelf} />
           ))}
         </div>
@@ -17,4 +17,4 @@ class ShelfsCollection extends Component {
   }
 }
 
-export default ShelfsCollection
+export default ShelvesCollection

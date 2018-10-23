@@ -3,11 +3,11 @@ import { Route } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './App.css'
 import SearchBar from './components/SearchBar'
-import ShelfsCollection from './components/ShelfsCollection'
+import ShelvesCollection from './components/ShelvesCollection'
 
 class BooksApp extends React.Component {
   state = {
-    shelfs: [
+    shelves: [
       {
         name: "Currently Reading",
         books: [
@@ -75,20 +75,18 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <Route exact to='/' render={() => (
+        <Route exact path='/' render={() => (
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
-            <ShelfsCollection shelfs={this.state.shelfs} />
+            <ShelvesCollection shelves={this.state.shelves} />
             <div className="open-search">
               <Link to='/search'>Add a book</Link>
             </div>
           </div>
         )} />
-        <Route exact to='/search' render={() => (
-          <SearchBar />
-        ) } />
+        <Route path='/search' component={SearchBar} />
       </div>
     )
   }
