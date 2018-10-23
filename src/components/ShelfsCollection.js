@@ -2,28 +2,15 @@ import React, { Component } from 'react'
 import BookShelf from './BookShelf'
 
 class ShelfsCollection extends Component {
-  state = {
-    shelfs: [
-      {
-        title: "Currently Reading",
-        books: []
-      }, {
-        title: "Want to Read",
-        books: []
-      }, {
-        title: "Read",
-        books: []
-      }
-    ],
-  }
+
   render(){
-    const { shelfs } = this.state;
+    const { shelfs } = this.props;
     return(
       <div className="list-books-content">
         <div>
-          {shelfs.map((shelf) => {
+          {shelfs.map((shelf) => (
             <BookShelf shelf={shelf} />
-          })}
+          ))}
         </div>
       </div>
     )

@@ -11,14 +11,12 @@ class BookCard extends Component {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(${book.url})`
+              backgroundImage: `url(${book.imageURL})`
             }}
           />
-          <div className="book-shelf-changer">
-            <BookMenuOption />
-          </div>
+          <BookMenuOption />
         </div>
-        <div className="book-title">{book.year}</div>
+        <div className="book-title">{book.title}</div>
         <div className="book-authors">{book.authors}</div>
       </div>
     )
