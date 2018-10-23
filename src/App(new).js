@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom'
 import './App.css'
 import SearchBar from './components/SearchBar'
 import ShelvesCollection from './components/ShelvesCollection'
+import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends React.Component {
   state = {
-    shelves: [
+    shelves_old: [
       {
         name: "Currently Reading",
         books: [
@@ -53,8 +54,47 @@ class BooksApp extends React.Component {
         ]
       }
     ],
+    shelves: [],
   }
+  componentDidMount = () => {
+    BooksAPI.getAll().then((response) => {
+      console.log(response);
+      const shelves_names = Array.from(new Set(response.map((book) => book.shelf)));
+      const shelves = shelves_names.map((shelf) => ({
+        name: shelf,
+        books: response.filter((book) => book.shelf === shelf).map((book) => ({
+          id: book.id,
+          title: book.title,
+          authors: book.authors,
+          imageURL: book.imageLinks.thumbnail
+        }))
+      }));
+      /* Output Example:
+      *   shelves: [
+      *     {
+      *       name: "Currently Reading",
+      *       books: [
+      *         {
+      *           id:'book_id'
+      *           title: 'To Kill a Mockingbird',
+      *           authors: 'Harper Lee',
+      *           imageURL: 'thumbnail_url'
+      *         },
+      *       ]
+      *     }
+      *   ]
+      */
+      this.setState((currentState) => ({
+        shelves: shelves,
+      }))
+    })
+  }
+  addBookOnShelf = (shelf_name, book_id) => {
 
+  }
+  removeBookOnShelf = (shelf_name, book_id) => {
+
+  }
   moveBook = (book_title, toShelf_name) => {
     const currentShelf = this.state.shelfs.filter((shelf) => {
       return shelf.books.filter((b) => {

@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import BookCard from './BookCard'
 
 class BookShelf extends Component {
+  onShelfChange = (book, future_shelf) => {
+
+  }
   render(){
     const { shelf } = this.props;
     return(
@@ -11,7 +14,7 @@ class BookShelf extends Component {
           <ol className="books-grid">
             {shelf.books.map((book) => (
               <li>
-                <BookCard book={book} currentShelf={shelf.name}/>
+                <BookCard book={book} currentShelf={shelf.name} onShelfChange={this.onShelfChange}/>
               </li>
             ))}
           </ol>

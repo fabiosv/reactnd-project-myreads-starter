@@ -20,7 +20,7 @@ class BookMenuOption extends Component {
     ],
   }
   componentDidMount = () => {
-    const currentShelf = this.state.options.filter((option) => option.label === this.props.currentShelf)[0].value;
+    const currentShelf = this.state.options.filter((option) => option.value === this.props.currentShelf)[0].value;
     this.setState((currentState) => ({
       currentShelf: currentShelf
     }))
@@ -29,6 +29,7 @@ class BookMenuOption extends Component {
     this.setState((currentState) => ({
       currentShelf: event.target.value
     }))
+    this.props.onShelfChange(this.state.currentShelf);
   }
   render() {
     const { currentShelf, options } = this.state;

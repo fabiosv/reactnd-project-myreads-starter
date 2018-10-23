@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import BookMenuOption from './BookMenuOption'
 
 class BookCard extends Component {
+  onShelfChange = (future_shelf) => {
+    this.props.onShelfChange(this.props.book, future_shelf);
+  }
   render(){
     const { book, currentShelf }= this.props;
     return(
@@ -14,7 +17,7 @@ class BookCard extends Component {
               backgroundImage: `url(${book.imageURL})`
             }}
           />
-          <BookMenuOption currentShelf={currentShelf}/>
+          <BookMenuOption currentShelf={currentShelf} onShelfChange={this.onShelfChange}/>
         </div>
         <div className="book-title">{book.title}</div>
         <div className="book-authors">{book.authors}</div>
