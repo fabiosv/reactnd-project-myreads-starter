@@ -64,18 +64,20 @@ class BooksApp extends React.Component {
     this.setState((currentState) => ({
       shelves: new_shelves,
     }));
+    BooksAPI.update(book, shelf_id);
   }
-  removeBookOnShelf = (book_id) => {
+  removeBookOnShelf = (book) => {
     var new_shelves = [...this.state.shelves];
-    const target_shelf = new_shelves.findIndex((shelf) => shelf.books.filter((book) =>
-      book.id === book_id).length === 1);
+    const target_shelf = new_shelves.findIndex((shelf) => shelf.books.filter((b) =>
+      b.id === book.id).length === 1);
 
     /*Removing book */
-    new_shelves[target_shelf].books = new_shelves[target_shelf].books.filter((book) => book.id !== book_id);
+    new_shelves[target_shelf].books = new_shelves[target_shelf].books.filter((b) => b.id !== book.id);
 
     this.setState((currentState) => ({
       shelves: new_shelves,
     }));
+    BooksAPI.update(book, new_shelves[target_shelf].id);
   }
   render() {
     return (

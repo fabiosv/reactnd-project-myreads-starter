@@ -5,7 +5,7 @@ class ShelvesCollection extends Component {
   onMoveBook = (future_shelf, book) => {
     console.log(future_shelf);
     const { addBookOnShelf, removeBookOnShelf } = this.props;
-    removeBookOnShelf(book.id);
+    removeBookOnShelf(book);
     future_shelf !== "none" && addBookOnShelf(future_shelf, book);
   }
   render(){
