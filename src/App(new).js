@@ -14,7 +14,6 @@ class BooksApp extends React.Component {
   }
   componentDidMount = () => {
     BooksAPI.getAll().then((response) => {
-      console.log(response);
       const shelves_names = Array.from(new Set(response.map((book) => book.shelf)));
       const shelves = shelves_names.map((shelf) => ({
         id: shelf,
@@ -29,6 +28,7 @@ class BooksApp extends React.Component {
       /* Output Example:
       *   shelves: [
       *     {
+      *       id: 'currentlyReading',
       *       name: "Currently Reading",
       *       books: [
       *         {
@@ -53,28 +53,29 @@ class BooksApp extends React.Component {
       }))
     })
   }
-  addBookOnShelf = (shelf_name, book_id) => {
 
-  }
-  removeBookOnShelf = (shelf_name, book_id) => {
+  addBookOnShelf = (shelf_id, book) => {
+    var new_shelves = [...this.state.shelves];
+    var target_shelf = new_shelves.findIndex((shelf) => shelf.id === shelf_id)
 
-  }
-  moveBook = (book_title, toShelf_name) => {
-    const currentShelf = this.state.shelfs.filter((shelf) => {
-      return shelf.books.filter((b) => {
-        return b.title === book_title
-      }).length >= 1
-    })[0];
-    const futureShelf = this.state.shelfs.filter((shelf) => {
-      return shelf.name === toShelf_name
-    })[0];
-    const otherShelfs = this.state.shelfs.filter((shelf) => {
-      return shelf.name !== currentShelf.name && shelf.name !== toShelf_name
-    });
+    /*Adding book*/
+    new_shelves[target_shelf].books = new_shelves[target_shelf].books.concat(book);
+
     this.setState((currentState) => ({
-      shelfs: currentState.shelfs
-    }))
+      shelves: new_shelves,
+    }));
+  }
+  removeBookOnShelf = (book_id) => {
+    var new_shelves = [...this.state.shelves];
+    const target_shelf = new_shelves.findIndex((shelf) => shelf.books.filter((book) =>
+      book.id === book_id).length === 1);
 
+    /*Removing book */
+    new_shelves[target_shelf].books = new_shelves[target_shelf].books.filter((book) => book.id !== book_id);
+
+    this.setState((currentState) => ({
+      shelves: new_shelves,
+    }));
   }
   render() {
     return (
@@ -84,7 +85,12 @@ class BooksApp extends React.Component {
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
-            <ShelvesCollection shelves={this.state.shelves} available_shelves={this.state.available_shelves}/>
+            <ShelvesCollection
+              shelves={this.state.shelves}
+              available_shelves={this.state.available_shelves}
+              addBookOnShelf={this.addBookOnShelf}
+              removeBookOnShelf={this.removeBookOnShelf}
+            />
             <div className="open-search">
               <Link to='/search'>Add a book</Link>
             </div>

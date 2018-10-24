@@ -9,18 +9,19 @@ class BookMenuOption extends Component {
       currentShelf: this.props.currentShelf
     }))
   }
-  handleOptions = (event) => {
+  handlerSelected = (value) => {
     this.setState((currentState) => ({
-      currentShelf: event.target.value
-    }))
-    this.props.onShelfChange(this.state.currentShelf);
+      currentShelf: value
+    }));
+    console.log(value);
+    this.props.onShelfChange(value);
   }
   render() {
     const { currentShelf } = this.state;
     const { available_shelves } = this.props;
     return(
       <div className="book-shelf-changer">
-        <select value={currentShelf} onChange={this.handleOptions} >
+        <select value={currentShelf} onChange={(event) => this.handlerSelected(event.target.value)} >
           <option value="move" disabled>Move to...</option>
           {available_shelves.map((shelf) => (
             <option value={shelf.id} key={shelf.id}>{shelf.name}</option>

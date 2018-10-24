@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import BookCard from './BookCard'
 
 class BookShelf extends Component {
-  onShelfChange = (book, future_shelf) => {
-
+  onShelfChange = (future_shelf, book) => {
+    this.props.onMoveBook(future_shelf, book)
   }
   render(){
     const { shelf, available_shelves } = this.props;

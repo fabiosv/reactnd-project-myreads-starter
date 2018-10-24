@@ -3,7 +3,7 @@ import BookMenuOption from './BookMenuOption'
 
 class BookCard extends Component {
   onShelfChange = (future_shelf) => {
-    this.props.onShelfChange(this.props.book, future_shelf);
+    this.props.onShelfChange(future_shelf, this.props.book);
   }
   render(){
     const { book, currentShelf, available_shelves }= this.props;
