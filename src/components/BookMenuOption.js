@@ -3,26 +3,10 @@ import React, { Component } from 'react'
 class BookMenuOption extends Component {
   state = {
     currentShelf: '',
-    options: [
-      {
-        value: 'currentlyReading',
-        label: 'Currently Reading'
-      }, {
-        value: 'wantToRead',
-        label: 'Want to Read'
-      }, {
-        value: 'read',
-        label: 'Read'
-      }, {
-        value: 'none',
-        label: 'None'
-      },
-    ],
   }
   componentDidMount = () => {
-    const currentShelf = this.state.options.filter((option) => option.value === this.props.currentShelf)[0].value;
     this.setState((currentState) => ({
-      currentShelf: currentShelf
+      currentShelf: this.props.currentShelf
     }))
   }
   handleOptions = (event) => {
@@ -32,14 +16,16 @@ class BookMenuOption extends Component {
     this.props.onShelfChange(this.state.currentShelf);
   }
   render() {
-    const { currentShelf, options } = this.state;
+    const { currentShelf } = this.state;
+    const { available_shelves } = this.props;
     return(
       <div className="book-shelf-changer">
         <select value={currentShelf} onChange={this.handleOptions} >
           <option value="move" disabled>Move to...</option>
-          {options.map((option) => (
-            <option value={option.value} key={option.value}>{option.label}</option>
+          {available_shelves.map((shelf) => (
+            <option value={shelf.id} key={shelf.id}>{shelf.name}</option>
           ))}
+          <option value="none">None</option>
         </select>
       </div>
     )
