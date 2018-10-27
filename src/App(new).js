@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar'
 import ShelvesCollection from './components/ShelvesCollection'
 import * as BooksAPI from './utils/BooksAPI'
 import camelCaseToPhrase from './utils/StringsMethods'
+// import parseAPI from './utils/ShelvesParser'
 
 class BooksApp extends React.Component {
   state = {
@@ -20,44 +21,48 @@ class BooksApp extends React.Component {
     const shelves_names = [...default_shelves, ...new_shelves];
     return shelves_names;
   }
+  extractShelves = (response, available_shelves) => {
+    return available_shelves.map((shelf) => ({
+      id: shelf,
+      name: camelCaseToPhrase(shelf),
+      books: response.filter((book) => book.shelf === shelf).map((book) => ({
+        id: book.id,
+        title: book.title,
+        authors: book.authors,
+        imageURL: book.imageLinks.thumbnail
+      }))
+    }));
+  /* Output Example:
+  *   shelves: [
+  *     {
+  *       id: 'currentlyReading',
+  *       name: "Currently Reading",
+  *       books: [
+  *         {
+  *           id:'book_id'
+  *           title: 'To Kill a Mockingbird',
+  *           authors: 'Harper Lee',
+  *           imageURL: 'thumbnail_url'
+  *         },
+  *       ]
+  *     }
+  *   ]
+  */
+  }
   componentDidMount = () => {
     BooksAPI.getAll().then((response) => {
       const shelves_names = this.checkNewShelves(response);
-      const shelves = shelves_names.map((shelf) => ({
-        id: shelf,
-        name: camelCaseToPhrase(shelf),
-        books: response.filter((book) => book.shelf === shelf).map((book) => ({
-          id: book.id,
-          title: book.title,
-          authors: book.authors,
-          imageURL: book.imageLinks.thumbnail
-        }))
-      }));
-      /* Output Example:
-      *   shelves: [
-      *     {
-      *       id: 'currentlyReading',
-      *       name: "Currently Reading",
-      *       books: [
-      *         {
-      *           id:'book_id'
-      *           title: 'To Kill a Mockingbird',
-      *           authors: 'Harper Lee',
-      *           imageURL: 'thumbnail_url'
-      *         },
-      *       ]
-      *     }
-      *   ]
-      */
-      this.setState((currentState) => ({
-        shelves: shelves,
-      }))
       const available_shelves = shelves_names.map((shelf) => ({
         id: shelf,
         name: camelCaseToPhrase(shelf),
       }));
       this.setState((currentState) => ({
         available_shelves: available_shelves,
+      }))
+
+      const shelves = this.extractShelves(response, shelves_names);
+      this.setState((currentState) => ({
+        shelves: shelves,
       }))
     })
   }
@@ -91,6 +96,7 @@ class BooksApp extends React.Component {
     BooksAPI.update(book, 'future');
   }
   render() {
+    const {available_shelves, shelves} = this.state;
     return (
       <div className="app">
         <Route exact path='/' render={() => (
@@ -99,8 +105,8 @@ class BooksApp extends React.Component {
               <h1>MyReads</h1>
             </div>
             <ShelvesCollection
-              shelves={this.state.shelves}
-              available_shelves={this.state.available_shelves}
+              shelves={shelves}
+              available_shelves={available_shelves}
               addBookOnShelf={this.addBookOnShelf}
               removeBookOnShelf={this.removeBookOnShelf}
               removeFromAPI={this.removeFromAPI}
@@ -110,7 +116,15 @@ class BooksApp extends React.Component {
             </div>
           </div>
         )} />
-        <Route path='/search' component={SearchBar} />
+        <Route path='/search' render={() => (
+          <SearchBar
+            available_shelves={available_shelves}
+            onSearch={this.extractShelves}
+            myShelves={shelves}
+            addBookOnShelf={this.addBookOnShelf}
+            removeBookOnShelf={this.removeBookOnShelf}
+          />
+        )} />
       </div>
     )
   }

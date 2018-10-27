@@ -7,6 +7,7 @@ class BookCard extends Component {
   }
   render(){
     const { book, currentShelf, available_shelves }= this.props;
+    console.log(currentShelf);
     return(
       <div className="book">
         <div className="book-top">
