@@ -1,14 +1,33 @@
 # MyReads Project
 
-This is the starter template for the final assessment project for Udacity's React Fundamentals course. The goal of this template is to save you time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. If you choose to start with this template, your job will be to add interactivity to the app by refactoring the static code in this template.
+This project is an assessment project for Udacity's React Fundamentals course. The goal is practice the fundamentals learning
+in the course as control components, state management, functional components, Route and so on.
 
-Of course, you are free to start this project from scratch if you wish! Just be sure to use [Create React App](https://github.com/facebookincubator/create-react-app) to bootstrap the project.
+The following features should be implemented (to be accepted):
+- Display 3 shelf : 'Currently Reading', 'Want To Read', 'Read'
+- User may move a book between shelves
+- Books should still on their shelves after page reload (use BooksAPI to keep book state)
+- Search page has an input tag which allow users to perform queries for new books
+- User can save the searched book in one shelf, this book should appear on main page at selected shelf
+- The searched book should display its shelf on change menu
+
+In addition, this features was also implemented:
+- Shelves is based on API, if a new shelf becomes available the application will display this
+- The minimum shelves was set to ["wantToRead", "currentlyReading", "read"] to avoid a shelf dissapear when the user remove all books in a shelf and reload the page
+
+Desirable features (may not be implemented until assessment's deadline):
+- Rate a book with stars
+- Share a book in social media (Facebook, Whatsapp, Google+, Telegram)
+- Page to check details for each book
+- Undo bar should temporary appears after the user move a book to another shelf, and it should restore previous state if clicked
+- Allow user to write comments for a book
 
 ## TL;DR
 
 To get started developing right away:
 
 * install all project dependencies with `npm install`
+* install all project dependencies with `npm install --no-bin-links` if you are using Vagrant or VirtualBox
 * start the development server with `npm start`
 
 ## What You're Getting
@@ -24,13 +43,21 @@ To get started developing right away:
     ├── App.css # Styles for your app. Feel free to customize this as you desire.
     ├── App.js # This is the root of your app. Contains static HTML right now.
     ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
-    ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
+    ├── components # This is where react components are stored
+    │   ├── BookCard.js
+    │   ├── BookMenuOption.js
+    │   ├── BookShelf.js
+    │   ├── SearchBar.js
+    │   └── ShelvesCollection.js
     ├── icons # Helpful images for your app. Use at your discretion.
     │   ├── add.svg
     │   ├── arrow-back.svg
     │   └── arrow-drop-down.svg
     ├── index.css # Global styles. You probably won't need to change anything here.
-    └── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    ├── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    └── utils
+        ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
+        └── StringsMethods.js # A JavaScript functions for String manipulation.
 ```
 
 Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.
@@ -63,7 +90,7 @@ update(book, shelf)
 ```
 
 * book: `<Object>` containing at minimum an `id` attribute
-* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"]  
+* shelf: `<String>` contains one of ["wantToRead", "currentlyReading", "read"]
 * Returns a Promise which resolves to a JSON object containing the response data of the POST request
 
 ### `search`

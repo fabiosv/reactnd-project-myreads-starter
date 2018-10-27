@@ -2,26 +2,63 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from '../utils/BooksAPI'
 import BookCard from './BookCard'
+import { func, array } from 'prop-types'
 
+/**
+* @description Search Page - Search new books and add in a specific shelf
+* @prop {method} addBookOnShelf - append one book in a specific shelf and update API
+* @prop {method} removeBookOnShelf - delete one book from a specific shelf
+* @prop {method} removeFromAPI - update API setting shelf to 'none'
+* @prop {array} available_shelves - array including a hash object with shelf name and id. e.g.: [{id: 'read', name: 'Read'}]. This will be used to render menu options
+* @prop {array} myShelves - array including many shelf and stored books. e.g.: [{id: 'read', name: 'Read', books: []}]
+*/
 class SearchBar extends Component{
+  static propTypes = {
+    addBookOnShelf: func.isRequired,
+    removeBookOnShelf: func.isRequired,
+    removeFromAPI: func.isRequired,
+    available_shelves: array.isRequired,
+    myShelves: array.isRequired,
+  }
   state = {
     query: '',
     booksFound: [],
   }
+
+  /**
+  * @description Handle query input and search for new books
+  * @param {string} text - Text from input tag
+  */
   handleQuery = (text) => {
     this.setState((currentState) => ({
       query: text,
     }));
     this.doSearch();
   }
+
+  /**
+  * @description Clear books retrieved from previous Search
+  */
   clearResult = () => {
     this.setState((currentState) => ({booksFound: []}))
   }
+
+  /**
+  * @description Get book cover if present in API Response
+  * @param {hash} book - book info
+  * @return {string} thumbnail url or ''
+  */
   getBookImage = (book) => {
     return typeof book.imageLinks !== 'undefined' && book.imageLinks.thumbnail !== 'undefined'
       ? book.imageLinks.thumbnail
       : ''
   }
+
+  /**
+  * @description Find book in myShelves and return shelf id
+  * @param {hash} book - book info
+  * @return {string} shelf id or 'none' if not found
+  */
   getShelfId = (book) => {
     const shelfNumber = this.props.myShelves.findIndex((shelf) => shelf.books.filter((b) =>
     b.id === book.id).length === 1);
@@ -29,6 +66,10 @@ class SearchBar extends Component{
       ? this.props.myShelves[shelfNumber].id
       : 'none'
   }
+
+  /**
+  * @description Call search method from API and set booksFound with retrieved books
+  */
   doSearch = () => {
     BooksAPI.search(this.state.query).then((response) => {
       console.log(response);
@@ -48,10 +89,23 @@ class SearchBar extends Component{
       }
     });
   }
+
+  /**
+  * @description Add the searched book in a specific shelf, move if this book is placed in any shelf or remove if user select 'none'
+  * @param {string} future_shelf - The shelf name where book will be placed
+  * @param {hash} book - The book object that will be appended
+  */
   onBookAdded = (future_shelf, book) => {
     book.currentShelf !== 'none' && this.props.removeBookOnShelf(book);
-    this.props.addBookOnShelf(future_shelf, book);
+    future_shelf === 'none'
+    ? this.props.removeFromAPI(book)
+    : this.props.addBookOnShelf(future_shelf, book);
   }
+
+  /**
+  * @description Check if search not returned any books
+  * @return {boolean}
+  */
   booksNotFound = () => {
     return this.state.booksFound.length === 0 && this.state.query.length > 0
   }

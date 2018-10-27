@@ -6,7 +6,6 @@ import SearchBar from './components/SearchBar'
 import ShelvesCollection from './components/ShelvesCollection'
 import * as BooksAPI from './utils/BooksAPI'
 import camelCaseToPhrase from './utils/StringsMethods'
-// import parseAPI from './utils/ShelvesParser'
 
 class BooksApp extends React.Component {
   state = {
@@ -14,6 +13,12 @@ class BooksApp extends React.Component {
     default_shelves: ['currentlyReading', 'wantToRead', 'read'],
     available_shelves: []
   }
+
+  /**
+  * @description Check if there are any book with a new shelf, not mapped in default_shelves
+  * @param {array} api_response - Verify if API has a new shelf available
+  * @return {array} shelves_names - including default shelves and new shelves mapped from API
+  */
   checkNewShelves = (api_response) => {
     const default_shelves = [...this.state.default_shelves];
     const shelves_from_api = Array.from(new Set(api_response.map((book) => book.shelf)));
@@ -21,19 +26,12 @@ class BooksApp extends React.Component {
     const shelves_names = [...default_shelves, ...new_shelves];
     return shelves_names;
   }
-  extractShelves = (response, available_shelves) => {
-    return available_shelves.map((shelf) => ({
-      id: shelf,
-      name: camelCaseToPhrase(shelf),
-      books: response.filter((book) => book.shelf === shelf).map((book) => ({
-        id: book.id,
-        title: book.title,
-        authors: book.authors,
-        imageURL: book.imageLinks.thumbnail
-      }))
-    }));
-  /* Output Example:
-  *   shelves: [
+
+  /**
+  * @description Extract shelves info. e.g.: id, name, books
+  * @param {array} response - Books returned from API
+  * @param {array} available_shelves - array including a hash objects with shelf name and id. e.g.: [{id: 'read', name: 'Read'}].
+  * @return {list} shelves = [
   *     {
   *       id: 'currentlyReading',
   *       name: "Currently Reading",
@@ -48,7 +46,63 @@ class BooksApp extends React.Component {
   *     }
   *   ]
   */
+  extractShelves = (response, available_shelves) => {
+    return available_shelves.map((shelf) => ({
+      id: shelf,
+      name: camelCaseToPhrase(shelf),
+      books: response.filter((book) => book.shelf === shelf).map((book) => ({
+        id: book.id,
+        title: book.title,
+        authors: book.authors,
+        imageURL: book.imageLinks.thumbnail
+      }))
+    }));
   }
+
+  /**
+  * @description Add a book in the shelf
+  * @param {string} shelf_id - The shelf name where book will be placed
+  * @param {hash} book - The book object that will be appended
+  */
+  addBookOnShelf = (shelf_id, book) => {
+    var new_shelves = [...this.state.shelves];
+    var target_shelf = new_shelves.findIndex((shelf) => shelf.id === shelf_id)
+
+    /*Adding book*/
+    new_shelves[target_shelf].books = new_shelves[target_shelf].books.concat(book);
+
+    this.setState((currentState) => ({
+      shelves: new_shelves,
+    }));
+    BooksAPI.update(book, shelf_id);
+  }
+
+  /**
+  * @description Remove a book from a specific shelf
+  * @param {hash} book - The book object that will be removed from shelves
+  */
+  removeBookOnShelf = (book) => {
+    var new_shelves = [...this.state.shelves];
+    const target_shelf = new_shelves.findIndex((shelf) => shelf.books.filter((b) =>
+      b.id === book.id).length === 1);
+
+    /*Removing book */
+    new_shelves[target_shelf].books = new_shelves[target_shelf].books.filter((b) => b.id !== book.id);
+
+    this.setState((currentState) => ({
+      shelves: new_shelves,
+    }));
+    BooksAPI.update(book, new_shelves[target_shelf].id);
+  }
+
+  /**
+  * @description If 'none' was selected in Menu, this function will update API to remove book from main page
+  * @param {hash} book - The book object that will be removed
+  */
+  removeFromAPI = (book)=> {
+    BooksAPI.update(book, 'none');
+  }
+
   componentDidMount = () => {
     BooksAPI.getAll().then((response) => {
       const shelves_names = this.checkNewShelves(response);
@@ -65,35 +119,6 @@ class BooksApp extends React.Component {
         shelves: shelves,
       }))
     })
-  }
-
-  addBookOnShelf = (shelf_id, book) => {
-    var new_shelves = [...this.state.shelves];
-    var target_shelf = new_shelves.findIndex((shelf) => shelf.id === shelf_id)
-
-    /*Adding book*/
-    new_shelves[target_shelf].books = new_shelves[target_shelf].books.concat(book);
-
-    this.setState((currentState) => ({
-      shelves: new_shelves,
-    }));
-    BooksAPI.update(book, shelf_id);
-  }
-  removeBookOnShelf = (book) => {
-    var new_shelves = [...this.state.shelves];
-    const target_shelf = new_shelves.findIndex((shelf) => shelf.books.filter((b) =>
-      b.id === book.id).length === 1);
-
-    /*Removing book */
-    new_shelves[target_shelf].books = new_shelves[target_shelf].books.filter((b) => b.id !== book.id);
-
-    this.setState((currentState) => ({
-      shelves: new_shelves,
-    }));
-    BooksAPI.update(book, new_shelves[target_shelf].id);
-  }
-  removeFromAPI = (book)=> {
-    BooksAPI.update(book, 'future');
   }
   render() {
     const {available_shelves, shelves} = this.state;
@@ -123,6 +148,7 @@ class BooksApp extends React.Component {
             myShelves={shelves}
             addBookOnShelf={this.addBookOnShelf}
             removeBookOnShelf={this.removeBookOnShelf}
+            removeFromAPI={this.removeFromAPI}
           />
         )} />
       </div>
