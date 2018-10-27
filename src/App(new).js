@@ -10,11 +10,19 @@ import camelCaseToPhrase from './utils/StringsMethods'
 class BooksApp extends React.Component {
   state = {
     shelves: [],
-    available_shelves: [],
+    default_shelves: ['currentlyReading', 'wantToRead', 'read'],
+    available_shelves: []
+  }
+  checkNewShelves = (api_response) => {
+    const default_shelves = [...this.state.default_shelves];
+    const shelves_from_api = Array.from(new Set(api_response.map((book) => book.shelf)));
+    const new_shelves = shelves_from_api.filter((api_shelf) => !default_shelves.includes(api_shelf));
+    const shelves_names = [...default_shelves, ...new_shelves];
+    return shelves_names;
   }
   componentDidMount = () => {
     BooksAPI.getAll().then((response) => {
-      const shelves_names = Array.from(new Set(response.map((book) => book.shelf)));
+      const shelves_names = this.checkNewShelves(response);
       const shelves = shelves_names.map((shelf) => ({
         id: shelf,
         name: camelCaseToPhrase(shelf),
@@ -79,6 +87,9 @@ class BooksApp extends React.Component {
     }));
     BooksAPI.update(book, new_shelves[target_shelf].id);
   }
+  removeFromAPI = (book)=> {
+    BooksAPI.update(book, 'future');
+  }
   render() {
     return (
       <div className="app">
@@ -92,6 +103,7 @@ class BooksApp extends React.Component {
               available_shelves={this.state.available_shelves}
               addBookOnShelf={this.addBookOnShelf}
               removeBookOnShelf={this.removeBookOnShelf}
+              removeFromAPI={this.removeFromAPI}
             />
             <div className="open-search">
               <Link to='/search'>Add a book</Link>

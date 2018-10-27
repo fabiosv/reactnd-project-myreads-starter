@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import BookShelf from './BookShelf'
 
 class ShelvesCollection extends Component {
-  onMoveBook = (future_shelf, book) => {
+  onShelfChange = (future_shelf, book) => {
     console.log(future_shelf);
-    const { addBookOnShelf, removeBookOnShelf } = this.props;
+    const { addBookOnShelf, removeBookOnShelf, removeFromAPI } = this.props;
     removeBookOnShelf(book);
-    future_shelf !== "none" && addBookOnShelf(future_shelf, book);
+    future_shelf !== "none"
+      ? addBookOnShelf(future_shelf, book)
+      : removeFromAPI(book);
   }
   render(){
     const { shelves, available_shelves } = this.props;
@@ -14,7 +16,7 @@ class ShelvesCollection extends Component {
       <div className="list-books-content">
         <div>
           {shelves.map((shelf) => (
-            <BookShelf key={shelf.id} shelf={shelf} available_shelves={available_shelves} onMoveBook={this.onMoveBook}/>
+            <BookShelf key={shelf.id} shelf={shelf} available_shelves={available_shelves} onShelfChange={this.onShelfChange}/>
           ))}
         </div>
       </div>

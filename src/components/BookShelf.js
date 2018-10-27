@@ -3,7 +3,7 @@ import BookCard from './BookCard'
 
 class BookShelf extends Component {
   onShelfChange = (future_shelf, book) => {
-    this.props.onMoveBook(future_shelf, book)
+    this.props.onShelfChange(future_shelf, book)
   }
   render(){
     const { shelf, available_shelves } = this.props;

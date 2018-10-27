@@ -5,8 +5,9 @@ class BookMenuOption extends Component {
     currentShelf: '',
   }
   componentDidMount = () => {
+    const currentShelf = this.props.currentShelf === '' ? 'none' : this.props.currentShelf;
     this.setState((currentState) => ({
-      currentShelf: this.props.currentShelf
+      currentShelf: currentShelf,
     }))
   }
   handlerSelected = (value) => {
