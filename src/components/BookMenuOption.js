@@ -30,7 +30,6 @@ class BookMenuOption extends Component {
     this.setState((currentState) => ({
       currentShelf: value
     }));
-    console.log(value);
     this.props.onShelfChange(value);
   }
   render() {

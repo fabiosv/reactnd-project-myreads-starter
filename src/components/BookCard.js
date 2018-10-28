@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import BookMenuOption from './BookMenuOption'
 import {func, string, array, shape} from 'prop-types'
+import { Link } from 'react-router-dom'
+import { IoMdEye } from 'react-icons/io';
 
 /**
 * @description React Component - generate book card with menu.
@@ -33,7 +35,6 @@ class BookCard extends Component {
   }
   render(){
     const { book, currentShelf, available_shelves }= this.props;
-    console.log(currentShelf);
     return(
       <div className="book">
         <div className="book-top">
@@ -43,7 +44,16 @@ class BookCard extends Component {
               height: 193,
               backgroundImage: `url(${book.imageURL})`
             }}
-          />
+          >
+            <Link to={`/book/${book.id}`}>
+              <IoMdEye style={{
+                fill: 'white',
+                fontSize: '20px',
+                backgroundColor: 'gray',
+                opacity: '0.95'}}
+              >See Details</IoMdEye>
+            </Link>
+          </div>
           <BookMenuOption
             currentShelf={currentShelf}
             onShelfChange={this.onShelfChange}

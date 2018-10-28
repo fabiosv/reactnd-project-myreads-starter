@@ -1,11 +1,12 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import './App.css'
-import SearchBar from './components/SearchBar'
-import ShelvesCollection from './components/ShelvesCollection'
 import * as BooksAPI from './utils/BooksAPI'
 import camelCaseToPhrase from './utils/StringsMethods'
+
+import SearchPage from './components/SearchPage'
+import MyReadsPage from './components/MyReadsPage'
+import BookDetailsPage from './components/BookDetailsPage'
 
 class BooksApp extends React.Component {
   state = {
@@ -125,24 +126,16 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         <Route exact path='/' render={() => (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <ShelvesCollection
-              shelves={shelves}
-              available_shelves={available_shelves}
-              addBookOnShelf={this.addBookOnShelf}
-              removeBookOnShelf={this.removeBookOnShelf}
-              removeFromAPI={this.removeFromAPI}
-            />
-            <div className="open-search">
-              <Link to='/search'>Add a book</Link>
-            </div>
-          </div>
+          <MyReadsPage
+            shelves={shelves}
+            available_shelves={available_shelves}
+            addBookOnShelf={this.addBookOnShelf}
+            removeBookOnShelf={this.removeBookOnShelf}
+            removeFromAPI={this.removeFromAPI}
+          />
         )} />
         <Route path='/search' render={() => (
-          <SearchBar
+          <SearchPage
             available_shelves={available_shelves}
             onSearch={this.extractShelves}
             myShelves={shelves}
@@ -150,6 +143,9 @@ class BooksApp extends React.Component {
             removeBookOnShelf={this.removeBookOnShelf}
             removeFromAPI={this.removeFromAPI}
           />
+        )} />
+        <Route path='/book/:id' render={({match}) => (
+          <BookDetailsPage book_id={match.params.id}/>
         )} />
       </div>
     )

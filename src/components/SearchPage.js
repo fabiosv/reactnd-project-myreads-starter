@@ -12,7 +12,7 @@ import { func, array } from 'prop-types'
 * @prop {array} available_shelves - array including a hash object with shelf name and id. e.g.: [{id: 'read', name: 'Read'}]. This will be used to render menu options
 * @prop {array} myShelves - array including many shelf and stored books. e.g.: [{id: 'read', name: 'Read', books: []}]
 */
-class SearchBar extends Component{
+class SearchPage extends Component{
   static propTypes = {
     addBookOnShelf: func.isRequired,
     removeBookOnShelf: func.isRequired,
@@ -72,7 +72,6 @@ class SearchBar extends Component{
   */
   doSearch = () => {
     BooksAPI.search(this.state.query).then((response) => {
-      console.log(response);
       if(typeof response !== 'undefined' && response instanceof Array) {
         const books = response.map((book) => ({
           id: book.id,
@@ -149,4 +148,4 @@ class SearchBar extends Component{
   }
 }
 
-export default SearchBar
+export default SearchPage

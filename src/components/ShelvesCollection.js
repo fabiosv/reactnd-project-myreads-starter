@@ -25,7 +25,6 @@ class ShelvesCollection extends Component {
   * @param {hash} book - The book object that will be moved
   */
   onShelfChange = (future_shelf, book) => {
-    console.log(future_shelf);
     const { addBookOnShelf, removeBookOnShelf, removeFromAPI } = this.props;
     removeBookOnShelf(book);
     future_shelf !== "none"
