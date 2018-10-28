@@ -2,15 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import ShelvesCollection from './ShelvesCollection'
+import PageHeader from './PageHeader'
 
 function MyReadsPage (props) {
   const { shelves, available_shelves } = props;
   const { addBookOnShelf, removeBookOnShelf, removeFromAPI } = props;
   return(
     <div className="list-books">
-      <div className="list-books-title">
-        <h1>MyReads</h1>
-      </div>
+      <PageHeader header="MyReads" />
       <ShelvesCollection
         shelves={shelves}
         available_shelves={available_shelves}

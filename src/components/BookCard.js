@@ -3,6 +3,7 @@ import BookMenuOption from './BookMenuOption'
 import {func, string, array, shape} from 'prop-types'
 import { Link } from 'react-router-dom'
 import { IoMdEye } from 'react-icons/io';
+import Modal from 'react-modal'
 
 /**
 * @description React Component - generate book card with menu.
@@ -45,14 +46,14 @@ class BookCard extends Component {
               backgroundImage: `url(${book.imageURL})`
             }}
           >
-            <Link to={`/book/${book.id}`}>
+            <a to={`/book/${book.id}`}>
               <IoMdEye style={{
                 fill: 'white',
                 fontSize: '20px',
                 backgroundColor: 'gray',
                 opacity: '0.95'}}
               >See Details</IoMdEye>
-            </Link>
+            </a>
           </div>
           <BookMenuOption
             currentShelf={currentShelf}

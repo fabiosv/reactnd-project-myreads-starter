@@ -120,6 +120,7 @@ class BooksApp extends React.Component {
         shelves: shelves,
       }))
     })
+    console.log(this);
   }
   render() {
     const {available_shelves, shelves} = this.state;
@@ -145,7 +146,7 @@ class BooksApp extends React.Component {
           />
         )} />
         <Route path='/book/:id' render={({match}) => (
-          <BookDetailsPage book_id={match.params.id}/>
+          <BookDetailsPage book_id={match.params.id} />
         )} />
       </div>
     )
