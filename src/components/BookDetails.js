@@ -21,10 +21,10 @@ class BookDetails extends Component {
   state = {
     book: {},
     industryIdentifiers: [],
+    previewLink: '',
   }
   componentDidMount() {
     BooksAPI.get(this.props.book_id).then((response) => {
-      console.log(response);
       this.setState((currentState) => ({
         book: {
           title: response.title,
@@ -41,9 +41,9 @@ class BookDetails extends Component {
           description: response.description,
           imageLinks: response.imageLinks.thumbnail,
           canonicalVolumeLink: response.canonicalVolumeLink,
-          previewLink: response.previewLink,
           pageCount: response.pageCount,
         },
+        previewLink: this.checkEmpty(response.previewLink, ''),
       }));
     })
   }
@@ -57,7 +57,7 @@ class BookDetails extends Component {
     return typeof value === 'undefined' ? valueIfEmpty : value;
   }
   render(){
-    const { book } = this.state;
+    const { book, previewLink } = this.state;
     return(
       <Container>
         <Row sm={12}>
@@ -85,8 +85,8 @@ class BookDetails extends Component {
               fullSymbol="fa fa-star fa-2x"
             />
             <p style={{display: 'inline'}}>({book.ratingsCount})</p>
-            <ShareBar url={book.previewLink} />
-            <a href={book.previewLink} target="_blank" style={{marginLeft: '23%'}}>See Book <IoIosBook /></a>
+            <ShareBar url={previewLink} />
+            <a href={previewLink} target="_blank" style={{marginLeft: '23%'}}>See Book <IoIosBook /></a>
           </Col>
           <Col sm={12} md={6} className="right">
             <h2>{book.title}</h2>

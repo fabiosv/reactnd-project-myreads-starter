@@ -14,11 +14,12 @@ The following features should be implemented (to be accepted):
 In addition, this features was also implemented:
 - Shelves is based on API, if a new shelf becomes available the application will display this
 - The minimum shelves was set to ["wantToRead", "currentlyReading", "read"] to avoid a shelf dissapear when the user remove all books in a shelf and reload the page
+- Display book Rate with stars
+- Share a book in social media (Facebook, Whatsapp, Google+, Telegram)
+- Modal to check book details
+- Responsible pages and modal
 
 Desirable features (may not be implemented until assessment's deadline):
-- Rate a book with stars
-- Share a book in social media (Facebook, Whatsapp, Google+, Telegram)
-- Page to check details for each book
 - Undo bar should temporary appears after the user move a book to another shelf, and it should restore previous state if clicked
 - Allow user to write comments for a book
 
@@ -44,11 +45,15 @@ To get started developing right away:
     ├── App.js # This is the root of your app. Contains static HTML right now.
     ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
     ├── components # This is where react components are stored
-    │   ├── BookCard.js
-    │   ├── BookMenuOption.js
-    │   ├── BookShelf.js
-    │   ├── SearchBar.js
-    │   └── ShelvesCollection.js
+    │   ├── BookCard.js # Card displaying book cover, title and authors, Menu to choose shelf
+    │   ├── BookDetails.css # CSS for BookDetails Modal (Unfortunately I coldn't use react-bootstrap, not working)
+    │   ├── BookDetails.js # Display Book Details and options to share in social media and link to book preview
+    │   ├── BookMenuOption.js # Menu to choose shelf
+    │   ├── BookShelf.js # Shelf containing some BookCards
+    │   ├── PageHeader.js # Header Design for any page, just inform title
+    │   ├── SearchBar.js # Page to allow user add new books to shelves
+    │   ├── ShareBar.js # Bar with buttons to select a SocialMedia to share book link
+    │   └── ShelvesCollection.js # Collection of BookShelf
     ├── icons # Helpful images for your app. Use at your discretion.
     │   ├── add.svg
     │   ├── arrow-back.svg

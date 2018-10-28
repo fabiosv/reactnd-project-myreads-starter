@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from '../utils/BooksAPI'
 import BookCard from './BookCard'
 import { func, array } from 'prop-types'
+import {DebounceInput} from 'react-debounce-input'
 
 /**
 * @description Search Page - Search new books and add in a specific shelf
@@ -23,6 +24,7 @@ class SearchPage extends Component{
   state = {
     query: '',
     booksFound: [],
+    notFound: false,
   }
 
   /**
@@ -73,10 +75,11 @@ class SearchPage extends Component{
   doSearch = () => {
     BooksAPI.search(this.state.query).then((response) => {
       if(typeof response !== 'undefined' && response instanceof Array) {
+        this.setState((currentState) => ({notFound: false}));
         const books = response.map((book) => ({
           id: book.id,
           title: book.title,
-          authors: book.authors,
+          authors: this.checkEmpty(book.authors, []),
           imageURL: this.getBookImage(book),
           currentShelf: this.getShelfId(book),
         }));
@@ -85,8 +88,18 @@ class SearchPage extends Component{
         }));
       } else {
         this.clearResult();
+        this.setState((currentState) => ({notFound: true}));
       }
     });
+  }
+
+  /**
+  * @description Check if first parameter is 'undefined', returning second parameter if it's true or first parameter
+  * @param {object} value - Value to be tested
+  * @param {object} valueIfEmpty - Value to be returned weather first is 'undefined'
+  */
+  checkEmpty = (value, valueIfEmpty) => {
+    return typeof value === 'undefined' ? valueIfEmpty : value;
   }
 
   /**
@@ -106,7 +119,7 @@ class SearchPage extends Component{
   * @return {boolean}
   */
   booksNotFound = () => {
-    return this.state.booksFound.length === 0 && this.state.query.length > 0
+    return this.state.query.length > 0 && this.state.notFound
   }
   render(){
     const { booksFound } = this.state;
@@ -124,7 +137,13 @@ class SearchPage extends Component{
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author" onChange={(event) => this.handleQuery(event.target.value)}/>
+            <DebounceInput
+              minLength={2}
+              debounceTimeout={300}
+              type="text"
+              placeholder="Search by title or author"
+              onChange={(event) => this.handleQuery(event.target.value)}
+            />
           </div>
         </div>
         <div className="search-books-results">

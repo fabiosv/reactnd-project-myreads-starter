@@ -18,7 +18,6 @@ import {
 
 function ShareBar(props) {
   const {url} = props;
-  console.log(url);
   return(
     <div style={{display: 'block', marginTop: '6px'}}>
       <FacebookShareButton url={url}>
