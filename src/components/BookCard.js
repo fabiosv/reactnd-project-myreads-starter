@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import BookMenuOption from './BookMenuOption'
 import {func, string, array, shape} from 'prop-types'
-import { Link } from 'react-router-dom'
-import { IoMdEye } from 'react-icons/io';
+import { IoMdEye, IoIosClose } from 'react-icons/io'
+import BookDetails from './BookDetails'
 import Modal from 'react-modal'
+
 
 /**
 * @description React Component - generate book card with menu.
@@ -26,6 +27,9 @@ class BookCard extends Component {
       shelf: string,
     }),
   }
+  state = {
+    modalIsOpen: false,
+  }
 
   /**
   * @description Handler value for book menu option
@@ -33,6 +37,12 @@ class BookCard extends Component {
   */
   onShelfChange = (future_shelf) => {
     this.props.onShelfChange(future_shelf, this.props.book);
+  }
+  openModal = () => {
+    this.setState((currentState) => ({modalIsOpen: true}))
+  }
+  closeModal = () => {
+    this.setState((currentState) => ({modalIsOpen: false}))
   }
   render(){
     const { book, currentShelf, available_shelves }= this.props;
@@ -46,14 +56,32 @@ class BookCard extends Component {
               backgroundImage: `url(${book.imageURL})`
             }}
           >
-            <a to={`/book/${book.id}`}>
+            <a onClick={this.openModal}>
               <IoMdEye style={{
                 fill: 'white',
                 fontSize: '20px',
                 backgroundColor: 'gray',
-                opacity: '0.95'}}
+                opacity: '0.95'
+              }}
               >See Details</IoMdEye>
             </a>
+            <Modal
+              isOpen={this.state.modalIsOpen}
+              onRequestClose={this.closeModal}
+            >
+              <a
+                className="closeButton"
+                onClick={this.closeModal}
+                style={{
+                  float: 'right',
+                  display: 'block',
+                  fontSize: '25px',
+                }}
+              >
+                <IoIosClose />
+              </a>
+              <BookDetails book_id={book.id} closeModal={this.closeModal}/>
+            </Modal>
           </div>
           <BookMenuOption
             currentShelf={currentShelf}

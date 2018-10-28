@@ -6,7 +6,6 @@ import camelCaseToPhrase from './utils/StringsMethods'
 
 import SearchPage from './components/SearchPage'
 import MyReadsPage from './components/MyReadsPage'
-import BookDetailsPage from './components/BookDetailsPage'
 
 class BooksApp extends React.Component {
   state = {
@@ -144,9 +143,6 @@ class BooksApp extends React.Component {
             removeBookOnShelf={this.removeBookOnShelf}
             removeFromAPI={this.removeFromAPI}
           />
-        )} />
-        <Route path='/book/:id' render={({match}) => (
-          <BookDetailsPage book_id={match.params.id} />
         )} />
       </div>
     )
